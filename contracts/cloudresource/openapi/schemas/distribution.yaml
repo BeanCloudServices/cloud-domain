@@ -1,0 +1,17 @@
+DistributionUpsertRequest:
+  type: object
+  required:
+    - idempotencyKey
+  properties:
+    idempotencyKey:
+      type: string
+
+DistributionUpsert:
+  allOf: # Combines the main `DistributionUpsertRequest` schema with `DistributionUpsert`-specific properties 
+    - $ref: '#/DistributionUpsertRequest'
+    - type: object
+      # all other properties specific to a `Dog`
+      properties:
+        id:
+          type: string
+          format: uuid
