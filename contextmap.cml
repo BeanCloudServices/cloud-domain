@@ -1,0 +1,7 @@
+UserStory US1_ObjectStorageBucketForSoloWebDeveloper {
+  As an "Solo Web Developer creating a personal blog"
+    I want to "create" a "Project" for a "CloudAccount"
+    I want to "create" an "ObjectStorageBucket" with its "ProductionURL" for a "Project"
+  so that "I can use SFTP protocol to upload files to the bucket in a specified project environment."
+  so that "I can the "ProductionURL" can be accessed by authorised parties per environment."  
+}
