@@ -3,5 +3,126 @@ UserStory US1_ObjectStorageBucketForSoloWebDeveloper {
     I want to "create" a "Project" for a "CloudAccount"
     I want to "create" an "ObjectStorageBucket" with its "ProductionURL" for a "Project"
   so that "I can use SFTP protocol to upload files to the bucket in a specified project environment."
-  so that "I can the "ProductionURL" can be accessed by authorised parties per environment."  
+  so that "the ProductionURL can be accessed by authorised parties per environment."  
 }
+
+UserStory US2_StaticWebHostingForSoloWebDeveloper {
+  As an "Solo Web Developer creating a personal blog"
+    I want to "deploy" a "WebAssetArchive" with its "ProductionURL", "environment" // attributes are optional ('with its' part)
+//    I want to "deploy" a "WebAssetArchive" with its "URL", "environment" // attributes are optional ('with its' part)    
+//    I want to "update" an "Address" for a "Customer" // reference is optional ('for a' part)
+//    I want to "offer" a "Contract" for a "Customer" // reference is optional ('for a' part)    
+  so that "I can use SFTP protocol to upload files to the bucket in a specified project environment."
+  so that "I can attach it to a WebFront route and it can be accessed by authorised parties per environment."  
+}
+
+/* Domain & Subdomain Definitions */
+Domain BeanCloudDomain {
+	Subdomain BillingDomain {
+		type = CORE_DOMAIN
+		domainVisionStatement = "Support different cost and pricing models for survival"
+	}
+
+	Subdomain MarketplaceDomain {
+		type = CORE_DOMAIN
+		domainVisionStatement = "Where the money flows"
+	}
+	
+	Subdomain CloudManagementDomain {
+		type = CORE_DOMAIN
+		domainVisionStatement = "
+			A BeanCloud is a Cloud-As-A-Service (CAAS) cloud that can host other cloud platforms each of which is a decoupled platform cloud itself.
+			A cloud account, aka. cloud platform manages cloud users and their associated roles. 
+			Each cloud account is also a cloud user with superuser role on its own. 
+			A cloud user with projectowner role manages cloud projects, project members and project resources.
+			A cloud user with superuser role manages other cloud users and CaaS configuration.
+			A cloud user can also create other cloud accounts.
+		"
+	}
+	
+	Subdomain ProjectAccessManagementDomain {
+		type = CORE_DOMAIN
+		domainVisionStatement = "
+			Manage who is a member and what can the member do at what time.
+			What resources belong to what project.
+		"
+	}
+	
+	Subdomain ComputeDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = "CPU and RAM provisioning"
+	}
+	
+	Subdomain NetworkingDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = "Supporting Cloud networking resources such as Project Gateways, ZeroTrust framework and Environment isolation"
+	}
+	
+	Subdomain DatabaseDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = "Supporting Cloud DB resources from Relational to Columnar to KeyValue"
+	}	
+
+	Subdomain FileTransferDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = ""
+	}
+	
+	Subdomain StorageDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = ""
+	}
+	
+	Subdomain IdentityAndAccessManagementDomain {
+		type = GENERIC_SUBDOMAIN
+		domainVisionStatement = "
+		What 
+		"
+	}
+}
+
+/* Example Context Map written with 'ContextMapper DSL' */
+ContextMap BeanCloudContextMap {
+	type = SYSTEM_LANDSCAPE
+	state = TO_BE
+	
+	
+	/* Add bounded contexts to this context map: */
+	contains CustomerManagementContext
+	contains CustomerSelfServiceContext
+	contains PrintingContext
+	contains PolicyManagementContext
+	contains RiskManagementContext
+	contains DebtCollection
+	
+	/* Define the context relationships: */ 
+
+	CustomerSelfServiceContext <- CustomerManagementContext
+	
+	CustomerManagementContext <- PrintingContext
+	
+	PrintingContext -> PolicyManagementContext
+	
+	RiskManagementContext <-> PolicyManagementContext
+
+	PolicyManagementContext <- CustomerManagementContext
+
+	DebtCollection <- PrintingContext
+
+	PolicyManagementContext <-> DebtCollection	
+}
+	
+/* Bounded Context Definitions */
+BoundedContext CustomerManagementContext implements CustomerManagementDomain
+
+BoundedContext CustomerSelfServiceContext implements CustomerManagementDomain
+
+BoundedContext PrintingContext implements PrintingDomain
+
+BoundedContext PolicyManagementContext implements PolicyManagementDomain
+
+BoundedContext RiskManagementContext implements RiskManagementDomain
+
+BoundedContext DebtCollection implements DebtsDomain
+>>>>>>> 4fa0614 (First draft)
+>>>>>>> d9975db (First draft)
