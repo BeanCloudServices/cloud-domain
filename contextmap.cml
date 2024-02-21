@@ -48,6 +48,13 @@ Domain BeanCloudDomain {
 		"
 	}
 	
+	Subdomain ProjectEnvironmentDomain {
+		type = CORE_DOMAIN
+		domainVisionStatement = "
+			How many environments do we have and what semantics does each environment have ?
+		"
+	}
+
 	Subdomain ComputeDomain {
 		type = SUPPORTING_DOMAIN
 		domainVisionStatement = "CPU and RAM provisioning"
