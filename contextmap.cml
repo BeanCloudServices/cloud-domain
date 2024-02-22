@@ -1,7 +1,8 @@
-UserStory US1_ObjectStorageBucketForSoloWebDeveloper {
-  As an "Solo Web Developer creating a personal blog"
+UserStory US1_ObjectStorageBucket {
+  As a "Solo Web Developer creating a personal blog"
+  As a "Project Lead of a Project creating a monolithic web app"
     I want to "create" a "Project" for a "CloudAccount"
-    I want to "create" an "ObjectStorageBucket" with its "ProductionURL" for a "Project"
+    I want to "create" an "ObjectStorageBucket" with its "ProductionURL" for the "Project"
   so that "I can use SFTP protocol to upload files to the bucket in a specified project environment."
   so that "the ProductionURL can be accessed by authorised parties per environment."  
 }
@@ -28,41 +29,91 @@ Domain BeanCloudDomain {
 		domainVisionStatement = "Where the money flows"
 	}
 	
-	Subdomain CloudManagementDomain {
+	Subdomain CloudAdminDomain {
 		type = CORE_DOMAIN
 		domainVisionStatement = "
 			A BeanCloud is a Cloud-As-A-Service (CAAS) cloud that can host other cloud platforms each of which is a decoupled platform cloud itself.
 			A cloud account, aka. cloud platform manages cloud users and their associated roles. 
-			Each cloud account is also a cloud user with superuser role on its own. 
-			A cloud user with projectowner role manages cloud projects, project members and project resources.
+			Each cloud account is also a cloud user with superuser role on its own.
 			A cloud user with superuser role manages other cloud users and CaaS configuration.
 			A cloud user can also create other cloud accounts.
+			A Cloud also maintains a pool of domain names to be associated to projects.
 		"
+    Entity CloudAccount {
+      - CloudProject project
+    }
+    Entity CloudProject {
+      - CloudAccount account
+      String name
+    }
+    Entity CloudUser {
+      - CloudAccount account
+      String email
+      Boolean isSuperUser
+    }
+    Entity DomainName {
+      - CloudAccount account
+      - CloudProject project
+      String fqdn key
+    }
 	}
 	
 	Subdomain ProjectAccessManagementDomain {
 		type = CORE_DOMAIN
 		domainVisionStatement = "
 			Manage who is a member and what can the member do at what time.
-			What resources belong to what project.
+      A cloud user with projectowner role manages cloud projects, project members and project resources.
+			what resources belong to what project,
+      in a DDD manner.
 		"
+    Entity Project {
+      - CloudAccount account
+      String name
+    }
+    Entity ProjectMember {
+      String email
+      Boolean isOwner
+    }
+    Entity ProjectTeam {
+    }
+    Entity TeamMember {
+    }
+    Entity BoundedContext {
+      - ProjectTeam team
+      String name
+    }
 	}
-	
+
 	Subdomain ProjectEnvironmentDomain {
 		type = CORE_DOMAIN
 		domainVisionStatement = "
 			How many environments do we have and what semantics does each environment have ?
+			Handle deployment process.
+			Should the environment support Canary or A/B Testings ?
 		"
+	}
+
+	Subdomain ProjectGatewayDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = "
+		  Public/Private/Internal Gateway, ZeroTrust framework,
+		  Authen and Author,
+		  Routing Specs including Canary and A/B Testing.
+		"
+		Entity ProjectGateway {}
+		Entity ProjectRoute {}
+		enum GatewayType {
+      PUBLIC,
+      PRIVATE,
+      INTERNAL
+    }
 	}
 
 	Subdomain ComputeDomain {
 		type = SUPPORTING_DOMAIN
 		domainVisionStatement = "CPU and RAM provisioning"
-	}
-	
-	Subdomain NetworkingDomain {
-		type = SUPPORTING_DOMAIN
-		domainVisionStatement = "Supporting Cloud networking resources such as Project Gateways, ZeroTrust framework and Environment isolation"
+		Entity ComputeService {
+		}
 	}
 	
 	Subdomain DatabaseDomain {
@@ -72,18 +123,32 @@ Domain BeanCloudDomain {
 
 	Subdomain FileTransferDomain {
 		type = SUPPORTING_DOMAIN
-		domainVisionStatement = ""
+		domainVisionStatement = "
+		  To transfer files and folders from one Endpoint to another Endpoint
+		"
+    Service FileTransferService {
+      deployWebAssetArchive()
+      uploadFiles()
+      downloadFiles()
+      syncFiles()
+    }
 	}
 	
 	Subdomain StorageDomain {
 		type = SUPPORTING_DOMAIN
 		domainVisionStatement = ""
+    Entity ObjectStorageBucket {
+      String email
+      Boolean isOwner
+    }
 	}
 	
 	Subdomain IdentityAndAccessManagementDomain {
 		type = GENERIC_SUBDOMAIN
 		domainVisionStatement = "
-		What 
+		Account Registration,
+		Authentication,
+		Authorisation using RBAC with roles defined by other subdomains
 		"
 	}
 }
@@ -131,5 +196,3 @@ BoundedContext PolicyManagementContext implements PolicyManagementDomain
 BoundedContext RiskManagementContext implements RiskManagementDomain
 
 BoundedContext DebtCollection implements DebtsDomain
->>>>>>> 4fa0614 (First draft)
->>>>>>> d9975db (First draft)
