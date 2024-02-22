@@ -58,7 +58,7 @@ Domain BeanCloudDomain {
     }
 	}
 	
-	Subdomain ProjectAccessManagementDomain {
+	Subdomain ProjectAccessDomain {
 		type = CORE_DOMAIN
 		domainVisionStatement = "
 			Manage who is a member and what can the member do at what time.
@@ -91,6 +91,9 @@ Domain BeanCloudDomain {
 			Handle deployment process.
 			Should the environment support Canary or A/B Testings ?
 		"
+		Entity ProjectEnvironment {
+		  Boolean isEphemeral
+		}
 	}
 
 	Subdomain ProjectGatewayDomain {
@@ -104,22 +107,46 @@ Domain BeanCloudDomain {
 		Entity ProjectRoute {}
 		enum GatewayType {
       PUBLIC,
-      PRIVATE,
-      INTERNAL
+      PRIVATE
+    }
+	}
+
+	Subdomain ServiceMeshDomain {
+    type = SUPPORTING_DOMAIN
+    domainVisionStatement = "
+      Only services within the same mesh can talk to each other.
+      External services even in the same Project have to talk to a mesh gateway and not directly to internal services.
+      Traffic from outside the Project cannot have direct access to MeshGateway or MeshService but has to go through a ProjectGateway.
+    "
+    Entity ServiceMesh {
+      - ProjectId projectId
+      - ServiceMesh parent /* Project level (top level) mesh has parent=null */
+      - BoundedContextId boundedContextId
+    }
+    Entity MeshGateway {}
+    Entity MeshRoute {}
+    Entity ServiceRoute {
+      - ComputeInstanceId destInstance
+      - List<ComputeInstanceId> srcInstance
     }
 	}
 
 	Subdomain ComputeDomain {
 		type = SUPPORTING_DOMAIN
 		domainVisionStatement = "CPU and RAM provisioning"
-		Entity ComputeService {
-		}
+		Entity ComputeInstance {
+		  - BoundedContextId boundedContextId
+		} /* Could be service or job */
 	}
-	
-	Subdomain DatabaseDomain {
+
+	Subdomain WorkflowDomain {
 		type = SUPPORTING_DOMAIN
-		domainVisionStatement = "Supporting Cloud DB resources from Relational to Columnar to KeyValue"
-	}	
+		domainVisionStatement = "Tasks in a Directed Acyclic Graph"
+		Entity DagDefinition {}
+		Entity TaskDefinition {}
+		Entity DagExecution {}
+		Entity TaskExecution {}
+	}
 
 	Subdomain FileTransferDomain {
 		type = SUPPORTING_DOMAIN
