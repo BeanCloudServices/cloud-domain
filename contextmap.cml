@@ -19,9 +19,15 @@ UserStory US2_StaticWebHostingForSoloWebDeveloper {
 
 /* Domain & Subdomain Definitions */
 Domain BeanCloudDomain {
-	Subdomain BillingDomain {
+	Subdomain CostControlDomain {
 		type = CORE_DOMAIN
-		domainVisionStatement = "Support different cost and pricing models for survival"
+		domainVisionStatement = "
+		  Support different cost and pricing models for survival.
+		  Essentially, cost-incur factors involve CPU, RAM, Storage and Traffic as well as Scalability and Redundancy.
+		  CostCentre is per TeamCapability
+		  Cost models include: serverless, hourly, reserved
+		  Const-control factors include: CCU, MAU, MGB
+		"
 	}
 
 	Subdomain MarketplaceDomain {
@@ -94,6 +100,11 @@ Domain BeanCloudDomain {
 		Entity ProjectEnvironment {
 		  Boolean isEphemeral
 		}
+	}
+
+	Subdomain BillingDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = ""
 	}
 
 	Subdomain ProjectGatewayDomain {
