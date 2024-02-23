@@ -78,7 +78,7 @@ Domain BeanCloudDomain {
     }
     Entity TeamMember {
     }
-    Entity BoundedContext {
+    Entity TeamCapability {
       - ProjectTeam team
       String name
     }
@@ -116,12 +116,12 @@ Domain BeanCloudDomain {
     domainVisionStatement = "
       Only services within the same mesh can talk to each other.
       External services even in the same Project have to talk to a mesh gateway and not directly to internal services.
-      Traffic from outside the Project cannot have direct access to MeshGateway or MeshService but has to go through a ProjectGateway.
+      Traffic from outside the Project cannot have direct access to MeshGateway or MeshService but has to go through a ProjectGateway unless this is a Project level Mesh in which a Mesh Gateway is ALSO a Project gateway.
     "
     Entity ServiceMesh {
       - ProjectId projectId
       - ServiceMesh parent /* Project level (top level) mesh has parent=null */
-      - BoundedContextId boundedContextId
+      - TeamCapability boundedContextId
     }
     Entity MeshGateway {}
     Entity MeshRoute {}
@@ -135,7 +135,7 @@ Domain BeanCloudDomain {
 		type = SUPPORTING_DOMAIN
 		domainVisionStatement = "CPU and RAM provisioning"
 		Entity ComputeInstance {
-		  - BoundedContextId boundedContextId
+		  - TeamCapability boundedContextId
 		} /* Could be service or job */
 	}
 
