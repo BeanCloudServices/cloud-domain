@@ -102,6 +102,13 @@ Domain BeanCloudDomain {
 		}
 	}
 
+	Subdomain ProjectRegistryDomain {
+		type = SUPPORTING_DOMAIN
+		domainVisionStatement = "
+		  Artifact Repositories such as simple file storage
+		"
+	}
+
 	Subdomain BillingDomain {
 		type = SUPPORTING_DOMAIN
 		domainVisionStatement = ""
@@ -171,7 +178,7 @@ Domain BeanCloudDomain {
       syncFiles()
     }
 	}
-	
+
 	Subdomain StorageDomain {
 		type = SUPPORTING_DOMAIN
 		domainVisionStatement = ""
@@ -198,6 +205,7 @@ ContextMap BeanCloudContextMap {
 	
 	
 	/* Add bounded contexts to this context map: */
+	contains ProjectRegistryContext
 	contains CustomerManagementContext
 	contains CustomerSelfServiceContext
 	contains PrintingContext
@@ -205,7 +213,7 @@ ContextMap BeanCloudContextMap {
 	contains RiskManagementContext
 	contains DebtCollection
 	
-	/* Define the context relationships: */ 
+	/* Define the context relationships: */
 
 	CustomerSelfServiceContext <- CustomerManagementContext
 	
@@ -223,6 +231,16 @@ ContextMap BeanCloudContextMap {
 }
 	
 /* Bounded Context Definitions */
+BoundedContext ProjectRegistryContext implements ProjectRegistryDomain {
+		Service WebAssetArchiveService {
+		}
+    Entity WebAssetArchive {
+      String hostname
+      String path
+
+    }
+}
+
 BoundedContext CustomerManagementContext implements CustomerManagementDomain
 
 BoundedContext CustomerSelfServiceContext implements CustomerManagementDomain
