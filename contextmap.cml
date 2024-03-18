@@ -1,5 +1,7 @@
+
+
 UserStory US1_ObjectStorageBucket {
-  As a "Solo Web Developer creating a personal blog"
+As a "Solo Web Developer creating a personal blog"
   As a "Project Lead of a Project creating a monolithic web app"
     I want to "create" a "Project" for a "CloudAccount"
     I want to "create" an "ObjectStorageBucket" with its "ProductionURL" for the "Project"
@@ -8,7 +10,7 @@ UserStory US1_ObjectStorageBucket {
 }
 
 UserStory US2_StaticWebHostingForSoloWebDeveloper {
-  As an "Solo Web Developer creating a personal blog"
+As an "Solo Web Developer creating a personal blog"
     I want to "deploy" a "WebAssetArchive" with its "ProductionURL", "environment" // attributes are optional ('with its' part)
 //    I want to "deploy" a "WebAssetArchive" with its "URL", "environment" // attributes are optional ('with its' part)    
 //    I want to "update" an "Address" for a "Customer" // reference is optional ('for a' part)
@@ -34,7 +36,7 @@ Domain BeanCloudDomain {
 		type = CORE_DOMAIN
 		domainVisionStatement = "Where the money flows"
 	}
-	
+
 	Subdomain CloudAdminDomain {
 		type = CORE_DOMAIN
 		domainVisionStatement = "
@@ -45,25 +47,35 @@ Domain BeanCloudDomain {
 			A cloud user can also create other cloud accounts.
 			A Cloud also maintains a pool of domain names to be associated to projects.
 		"
-    Entity CloudAccount {
-      - CloudProject project
-    }
-    Entity CloudProject {
-      - CloudAccount account
-      String name
-    }
-    Entity CloudUser {
-      - CloudAccount account
-      String email
-      Boolean isSuperUser
-    }
-    Entity DomainName {
-      - CloudAccount account
-      - CloudProject project
-      String fqdn key
-    }
+		Entity CloudAccount {
+			- CloudProject project
+		}
+		Entity CloudProject {
+			- CloudAccount account
+			String name
+		}
+		Entity CloudUser {
+			- CloudAccount account
+			String email
+			Boolean isSuperUser
+		}
+		Entity DomainName {
+			- CloudAccount account
+			- CloudProject project
+			String fqdn key
+		}
 	}
 	
+	Subdomain VendorCloudDomain {
+		
+	}
+	
+	Subdomain ProjectNetwork {
+		
+	}
+	
+	
+
 	Subdomain ProjectAccessDomain {
 		type = CORE_DOMAIN
 		domainVisionStatement = "
@@ -72,22 +84,22 @@ Domain BeanCloudDomain {
 			what resources belong to what project,
       in a DDD manner.
 		"
-    Entity Project {
-      - CloudAccount account
-      String name
-    }
-    Entity ProjectMember {
-      String email
-      Boolean isOwner
-    }
-    Entity ProjectTeam {
-    }
-    Entity TeamMember {
-    }
-    Entity TeamCapability {
-      - ProjectTeam team
-      String name
-    }
+		Entity Project {
+			- CloudAccount account
+			String name
+		}
+		Entity ProjectMember {
+			String email
+			Boolean isOwner
+		}
+		Entity ProjectTeam {
+		}
+		Entity TeamMember {
+		}
+		Entity TeamCapability {
+			- ProjectTeam team
+			String name
+		}
 	}
 
 	Subdomain ProjectEnvironmentDomain {
@@ -98,7 +110,7 @@ Domain BeanCloudDomain {
 			Should the environment support Canary or A/B Testings ?
 		"
 		Entity ProjectEnvironment {
-		  Boolean isEphemeral
+			Boolean isEphemeral
 		}
 	}
 
@@ -115,19 +127,23 @@ Domain BeanCloudDomain {
 	}
 
 	Subdomain ProjectGatewayDomain {
-		type = SUPPORTING_DOMAIN
-		domainVisionStatement = "
+	type = SUPPORTING_DOMAIN
+	domainVisionStatement = "
 		  Public/Private/Internal Gateway, ZeroTrust framework,
 		  Authen and Author,
 		  Routing Specs including Canary and A/B Testing.
 		"
-		Entity ProjectGateway {}
-		Entity ProjectRoute {}
-		enum GatewayType {
+	Entity ProjectGateway {
+	}
+	Entity ProjectRoute {
+	}
+	enum GatewayType {
       PUBLIC,
       PRIVATE
-    }
-	}
+
+}
+
+}
 
 	Subdomain ServiceMeshDomain {
     type = SUPPORTING_DOMAIN
